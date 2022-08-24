@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 
+const deploy = require("./routes/deploy");
+app.use("/refresh", deploy);
+
 const spotify = require("./routes/spotify");
 app.use("/spotify", spotify);
 
