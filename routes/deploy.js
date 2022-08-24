@@ -21,8 +21,8 @@ router.post("/", textMiddleware, async (req, res) => {
 
     let ret = JSON.parse(line);
 
-    await res.status(ret.status).end(ret.body);
     console.log("repl.deploy-success");
+    await res.status(ret.status).end(ret.body);
 });
 
 module.exports = router;
