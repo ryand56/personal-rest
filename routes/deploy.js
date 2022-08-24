@@ -3,7 +3,7 @@ const router = express.Router();
 
 const textMiddleware = require("plaintextparser");
 
-router.get("/", textMiddleware, (req, res) => {
+router.post("/", textMiddleware, (req, res) => {
     console.log("repl.deploy" + req.text + req.get("Signature"));
 
     let line = await readlineSync();
