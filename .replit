@@ -1,1 +1,26 @@
-run="./repl.deploy node index.js"
+# This is a .replit file
+# You can learn more about it in the README.md file
+
+# compile = ["echo", "compile"] # If your lang is compiled uncomment this line and add the compile step!
+run = ["./repl.deploy", "node", "index.js"] # Replace this with your langs run command
+entrypoint="index.js" # Replace with the language entrypoint EX: nodejs has index.js, python has main.py
+
+language = "nix" # leave as-is
+
+# IF UPM supports your language configure it here:
+[packager]
+language = "nodejs"
+
+[packager.features]
+packageSearch = true # Want replit to have the package search sidebar?
+guessImports = true # Want replit to try and guess packages
+
+[languages.language] # Replace "language" with your language
+pattern = "**/*.ext" # Replace ext with the languages extension
+syntax = "language" # Replace "language" with your language
+
+[languages.javascript.languageServer] # Replace "language" with your language
+start = ["typescript-language-server", "--stdio"] # Add your LSP here!
+
+# ALL DONE!
+# Now enjoy your nix-ified language
