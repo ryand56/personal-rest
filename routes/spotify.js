@@ -58,49 +58,56 @@ router.get("/", (req, res) => {
 
         if (!tokens.access || !tokens.refresh) return res.status(401).json({ success: false, message: "Not authorized" });
 
-        const ret = await axios.default.get("https://api.spotify.com/v1/me/player", {
-            headers: {
-                Authorization: `Bearer ${tokens.access}`
-            }
-        });
-
-        if (ret.status < 200 || ret.status >= 400) return res.status(ret.status).json({ success: false });
-        else if (ret.status === 204) return res.json({ success: true, data: { is_playing: false } });
-        else
+        try
         {
-            let item_author = "";
-
-            const authors = ret.data?.item?.authors ?? null;
-            if (authors !== null)
-            {
-                for (var i = 0; i < authors.length; i++)
-                {
-                    const author = authors[i];
-
-                    if (i === (authors.length - 1))
-                    {
-                        item_author += author.name;
-                    }
-
-                    item_author += `${author.name}, `;
-                }
-            }
-
-            return res.json({
-                success: true,
-                data: {
-                    is_playing: ret.data?.is_playing,
-                    device_name: ret.data?.device?.name ?? null,
-                    device_type: ret.data?.device?.type ?? null,
-                    item_name: ret.data?.item?.name ?? null,
-                    item_type: ret.data?.item?.type ?? null,
-                    item_author,
-                    item_id: ret.data?.item?.id ?? null,
-                    item_progress: ret.data?.progress_ms ?? null,
-                    item_length_ms: ret.data?.item?.duration_ms ?? null,
-                    started_at: ret.data?.timestamp ?? null
+            const ret = await axios.default.get("https://api.spotify.com/v1/me/player", {
+                headers: {
+                    Authorization: `Bearer ${tokens.access}`
                 }
             });
+
+            if (ret.status < 200 || ret.status >= 400) return res.status(ret.status).json({ success: false });
+            else if (ret.status === 204) return res.json({ success: true, data: { is_playing: false } });
+            else
+            {
+                let item_author = "";
+
+                const authors = ret.data?.item?.authors ?? null;
+                if (authors !== null)
+                {
+                    for (var i = 0; i < authors.length; i++)
+                    {
+                        const author = authors[i];
+
+                        if (i === (authors.length - 1))
+                        {
+                            item_author += author.name;
+                        }
+
+                        item_author += `${author.name}, `;
+                    }
+                }
+
+                return res.json({
+                    success: true,
+                    data: {
+                        is_playing: ret.data?.is_playing,
+                        device_name: ret.data?.device?.name ?? null,
+                        device_type: ret.data?.device?.type ?? null,
+                        item_name: ret.data?.item?.name ?? null,
+                        item_type: ret.data?.item?.type ?? null,
+                        item_author,
+                        item_id: ret.data?.item?.id ?? null,
+                        item_progress: ret.data?.progress_ms ?? null,
+                        item_length_ms: ret.data?.item?.duration_ms ?? null,
+                        started_at: ret.data?.timestamp ?? null
+                    }
+                });
+            }
+        }
+        catch (e)
+        {
+            res.status(403).json({ success: false });
         }
     });
 });
