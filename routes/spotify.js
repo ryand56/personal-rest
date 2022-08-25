@@ -46,8 +46,8 @@ router.get("/callback", async (req, res) => {
     
     if (ret.data.access_token && ret.data.refresh_token)
     {
-        if (!fs.existsSync("./tokenConfig")) fs.mkdirSync("./tokenConfig");
-        fs.writeFileSync("./tokenConfig/.spotify", JSON.stringify({ access: ret.data.access_token, refresh: ret.data.refresh_token }));
+        if (!fs.existsSync("config/tokenConfig")) fs.mkdirSync("config/tokenConfig");
+        fs.writeFileSync("config/tokenConfig/.spotify", JSON.stringify({ access: ret.data.access_token, refresh: ret.data.refresh_token }));
     }
 
     res.json({ success: true });
