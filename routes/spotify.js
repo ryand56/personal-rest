@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/authorize", (req, res) => {
-    if (SpotifyConfig.clientId === "" || SpotifyConfig.clientSecret === "") res.status(500).json({
+    if (SpotifyConfig.clientId === "" || SpotifyConfig.clientSecret === "") return res.status(500).json({
         success: false,
         message: "Not configured"
     });
@@ -27,7 +27,7 @@ router.get("/authorize", (req, res) => {
 
 router.get("/callback", async (req, res) => {
     const code = req.query.code;
-    if (!code) res.status(400).json({ success: false, message: "Code not provided" });
+    if (!code) return res.status(400).json({ success: false, message: "Code not provided" });
 
     const body = new URLSearchParams({
         code,
@@ -42,7 +42,7 @@ router.get("/callback", async (req, res) => {
         }
     });
 
-    if (ret.status < 200 || ret.status >= 400) res.status(500).json({ success: false, message: "Token exchange failed" });
+    if (ret.status < 200 || ret.status >= 400) return res.status(500).json({ success: false, message: "Token exchange failed" });
     
     if (ret.data.access_token && ret.data.refresh_token)
     {
