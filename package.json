@@ -13,6 +13,7 @@
     "plaintextparser": "^1.0.3"
   },
   "devDependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1"
   }
 }
