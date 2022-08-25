@@ -6,7 +6,28 @@ const fs = require("fs");
 const { BaseUrl, SpotifyConfig } = require("../config");
 
 router.get("/", (req, res) => {
-    res.status(204).end();
+    if (SpotifyConfig.clientId === "" || SpotifyConfig.clientSecret === "") return res.status(500).json({
+        success: false,
+        message: "Not configured"
+    });
+
+    fs.readFile("config/tokenConfig/.spotify", async (err, data) => {
+        if (err) return res.status(500).json({ success: false, message: "Unable to read spotify token file" });
+        
+        const tokens = JSON.parse(data);
+
+        if (!tokens.access || !tokens.refresh) return res.status(401).json({ success: false, message: "Not authorized" });
+
+        const ret = await axios.default.get("https://api.spotify.com/v1/me/player", {
+            headers: {
+                Authorization: `Bearer ${tokens.access}`
+            }
+        });
+
+        if (ret.status < 200 || ret.status >= 400) return res.status(ret.status).json({ success: false });
+        else if (ret.status === 204) return res.json({ success: true, data: { is_playing: false } });
+        else return res.json({ success: true, data: { is_playing: ret.data.is_playing } });
+    });
 });
 
 router.get("/authorize", (req, res) => {
