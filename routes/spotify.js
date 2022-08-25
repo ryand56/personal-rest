@@ -5,6 +5,46 @@ const axios = require("axios");
 const fs = require("fs");
 const { BaseUrl, SpotifyConfig } = require("../config");
 
+async function refreshToken()
+{
+    return new Promise((resolve, reject) => {
+        if (SpotifyConfig.clientId !== "" && SpotifyConfig.clientSecret !== "")
+        {
+            fs.readFile("config/tokenConfig/.spotify", async (err, data) => {
+                if (err) reject();
+
+                const tokens = JSON.parse(data);
+                if (!tokens.refresh) reject();
+
+                const query = new URLSearchParams({
+                    grant_type: "refresh_token",
+                    refresh_token: tokens.refresh
+                }).toString();
+
+                const ret = await axios.default.post("https://accounts.spotify.com/api/token", query, {
+                    headers: {
+                        Authorization: `Basic ${Buffer.from(`${SpotifyConfig.clientId}:${SpotifyConfig.clientSecret}`).toString("base64")}`,
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                });
+
+                if (ret.status >= 200 && ret.status < 400)
+                {
+                    const toWrite = JSON.stringify({
+                        access: ret.data.access_token,
+                        refresh: tokens.refresh
+                    });
+
+                    fs.writeFile("config/tokenConfig/.spotify", toWrite, errWr => {
+                        if (err) reject();
+                        resolve();
+                    });
+                }
+            });
+        }
+    });
+}
+
 router.get("/", (req, res) => {
     if (SpotifyConfig.clientId === "" || SpotifyConfig.clientSecret === "") return res.status(500).json({
         success: false,
@@ -107,6 +147,14 @@ router.get("/callback", async (req, res) => {
     }
 
     res.json({ success: true });
+});
+
+router.get("/refresh", (req, res) => {
+    refreshToken().then(() => {
+        res.status(204).end();
+    }).catch(() => {
+        res.status(500).end();
+    });
 });
 
 router.get("*", (req, res) => {
