@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/authorize", (req, res) => {
-    if (!SpotifyConfig.isConfigured) res.status(500).json({
+    if (SpotifyConfig.clientId === "" || SpotifyConfig.clientSecret === "") res.status(500).json({
         success: false,
         message: "Not configured"
     });
