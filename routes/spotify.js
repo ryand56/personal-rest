@@ -72,7 +72,7 @@ router.get("/", (req, res) => {
             {
                 let item_author = "";
 
-                const authors = ret.data?.item?.authors ?? null;
+                const authors = ret.data?.item?.artists ?? null;
                 if (authors !== null)
                 {
                     for (var i = 0; i < authors.length; i++)
