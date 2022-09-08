@@ -83,8 +83,10 @@ router.get("/", (req, res) => {
                         {
                             item_author += author.name;
                         }
-
-                        item_author += `${author.name}, `;
+                        else
+                        {
+                            item_author += `${author.name}, `;
+                        }
                     }
                 }
 
