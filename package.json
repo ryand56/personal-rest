@@ -13,6 +13,7 @@
     "plaintextparser": "^1.0.3"
   },
   "devDependencies": {
+    "@vercel/node": "^2.5.14",
     "axios": "^0.27.2",
     "dotenv": "^16.0.1"
   }
