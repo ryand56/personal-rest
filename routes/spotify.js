@@ -18,11 +18,11 @@ async function refreshToken()
         const raw = await docRef.get();
         const tokens = raw.data();
 
-        if (!tokens || !tokens.refresh) throw new Error("No tokens");
+        if (!tokens.accessToken || !tokens.refreshToken) throw new Error("No tokens");
 
         const query = new URLSearchParams({
             grant_type: "refresh_token",
-            refresh_token: tokens.refresh
+            refresh_token: tokens.refreshToken
         }).toString();
 
         const ret = await axios.default.post("https://accounts.spotify.com/api/token", query, {
@@ -34,14 +34,9 @@ async function refreshToken()
 
         if (ret.status >= 200 && ret.status < 400)
         {
-            const toWrite = JSON.stringify({
-                access: ret.data.access_token,
-                refresh: tokens.refresh
-            });
-
-            fs.writeFile("config/tokenConfig/.spotify", toWrite, errWr => {
-                if (err) reject();
-                resolve();
+            await docRef.set({
+                accessToken: ret.data.access_token,
+                refreshToken: ret.data.refresh_token
             });
         }
     }
