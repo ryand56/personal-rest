@@ -37,6 +37,8 @@ async function refreshToken()
             await docRef.set({
                 accessToken: ret.data.access_token,
                 refreshToken: tokens.refreshToken
+            }, {
+                merge: true
             });
         }
     }
@@ -156,6 +158,8 @@ router.get("/callback", async (req, res) => {
         await docRef.set({
             accessToken: ret.data.access_token,
             refreshToken: ret.data.refresh_token
+        }, {
+            merge: true
         });
     }
 
