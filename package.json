@@ -10,11 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.1",
+    "firebase-admin": "^11.0.1",
     "plaintextparser": "^1.0.3"
   },
   "devDependencies": {
     "@vercel/node": "^2.5.14",
-    "axios": "^0.27.2",
-    "dotenv": "^16.0.1"
+    "axios": "^0.27.2"
   }
 }
