@@ -166,7 +166,7 @@ router.get("/refresh", (req, res) => {
     try
     {
         refreshToken();
-        res.status(204).json({ success: true });
+        res.json({ success: true });
     }
     catch (e)
     {
