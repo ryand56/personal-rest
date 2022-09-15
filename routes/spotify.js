@@ -36,7 +36,7 @@ async function refreshToken()
         {
             await docRef.set({
                 accessToken: ret.data.access_token,
-                refreshToken: ret.data.refresh_token
+                refreshToken: tokens.refreshToken
             });
         }
     }
